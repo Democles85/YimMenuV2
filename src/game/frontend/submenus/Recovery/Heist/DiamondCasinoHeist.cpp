@@ -1,50 +1,80 @@
 #include "DiamondCasinoHeist.hpp"
+#include "HeistUI.hpp"
 
 namespace YimMenu::Submenus
 {
 	std::shared_ptr<TabItem> RenderDiamondCasinoHeistMenu()
 	{
+		using namespace HeistUI;
+
 		auto tab = std::make_shared<TabItem>("Diamond Casino Heist");
+		auto sections = std::make_shared<TabBarItem>("DiamondCasinoHeistSections");
+
+		// ── Setup ────────────────────────────────────────────────────────────
+		auto setupTab = std::make_shared<TabItem>("Setup");
 
 		auto cuts = std::make_shared<Group>("Heist Cuts", 2);
-		auto setups = std::make_shared<Group>("Heist Setups");
-		auto loots = std::make_shared<Group>("Loots", 2);
-		auto misc = std::make_shared<Group>("Misc", 1);
-
 		cuts->AddItem(std::make_shared<IntCommandItem>("diamondcasinoheistcut1"_J));
 		cuts->AddItem(std::make_shared<IntCommandItem>("diamondcasinoheistcut3"_J));
 		cuts->AddItem(std::make_shared<IntCommandItem>("diamondcasinoheistcut2"_J));
 		cuts->AddItem(std::make_shared<IntCommandItem>("diamondcasinoheistcut4"_J));
-		cuts->AddItem(std::make_shared<CommandItem>("diamondcasinoheistforceready"_J));
-		cuts->AddItem(std::make_shared<CommandItem>("diamondcasinoheistsetcuts"_J));
+		cuts->AddItem(std::make_shared<ImGuiItem>([] {
+			static constexpr ActionButton kCutActions[] = {
+			    {ICON_PERCENT, "Set Cuts",    "diamondcasinoheistsetcuts"_J},
+			    {ICON_USERS,   "Force Ready", "diamondcasinoheistforceready"_J},
+			};
+			DrawSetupActions(kCutActions);
+		}));
 
-		auto gunmanAndDriver = std::make_shared<Group>("", 2);
-		gunmanAndDriver->AddItem(std::make_shared<ListCommandItem>("diamondcasinoheistgunman"_J));
-		gunmanAndDriver->AddItem(std::make_shared<ListCommandItem>("diamondcasinoheistdriver"_J));
-		gunmanAndDriver->AddItem(std::make_shared<ListCommandItem>("diamondcasinoheistweapon"_J));
-		gunmanAndDriver->AddItem(std::make_shared<ListCommandItem>("diamondcasinoheistvehicle"_J));
+		auto setup = std::make_shared<Group>("Heist Setup");
+		setup->AddItem(std::make_shared<ListCommandItem>("diamondcasinoheistdifficulty"_J));
+		setup->AddItem(std::make_shared<ListCommandItem>("diamondcasinoheistprimarytarget"_J));
+		setup->AddItem(std::make_shared<ListCommandItem>("diamondcasinoheistapproach"_J));
 
-		setups->AddItem(std::make_shared<ListCommandItem>("diamondcasinoheistdifficulty"_J));
-		setups->AddItem(std::make_shared<ListCommandItem>("diamondcasinoheistprimarytarget"_J));
-		setups->AddItem(std::make_shared<ListCommandItem>("diamondcasinoheistapproach"_J));
-		setups->AddItem(std::move(gunmanAndDriver));
-		setups->AddItem(std::make_shared<ListCommandItem>("diamondcasinoheisthacker"_J));
-		setups->AddItem(std::make_shared<CommandItem>("diamondcasinoheistsetup"_J));
+		auto crew = std::make_shared<Group>("Crew", 2);
+		crew->AddItem(std::make_shared<ListCommandItem>("diamondcasinoheistgunman"_J));
+		crew->AddItem(std::make_shared<ListCommandItem>("diamondcasinoheistdriver"_J));
+		crew->AddItem(std::make_shared<ListCommandItem>("diamondcasinoheistweapon"_J));
+		crew->AddItem(std::make_shared<ListCommandItem>("diamondcasinoheistvehicle"_J));
+		setup->AddItem(std::move(crew));
+		setup->AddItem(std::make_shared<ListCommandItem>("diamondcasinoheisthacker"_J));
+		setup->AddItem(std::make_shared<ImGuiItem>([] {
+			static constexpr ActionButton kSetupActions[] = {
+			    {ICON_CHECK, "Apply Setup", "diamondcasinoheistsetup"_J},
+			};
+			DrawSetupActions(kSetupActions);
+		}));
 
+		auto loots = std::make_shared<Group>("Loots", 2);
 		loots->AddItem(std::make_shared<IntCommandItem>("diamondcasinoheistpotentialtake"_J));
 		loots->AddItem(std::make_shared<IntCommandItem>("diamondcasinoheistactualtake"_J));
-		loots->AddItem(std::make_shared<CommandItem>("diamondcasinoheistsetpotentialtake"_J, "Set##potentialtake"));
-		loots->AddItem(std::make_shared<CommandItem>("diamondcasinoheistsetactualtake"_J, "Set##actualtake"));
+		loots->AddItem(std::make_shared<ImGuiItem>([] {
+			static constexpr ActionButton kLootActions[] = {
+			    {ICON_COINS,  "Set Potential", "diamondcasinoheistsetpotentialtake"_J},
+			    {ICON_DOLLAR, "Set Actual",    "diamondcasinoheistsetactualtake"_J},
+			};
+			DrawSetupActions(kLootActions);
+		}));
 
-		misc->AddItem(std::make_shared<CommandItem>("diamondcasinoheistskiphacking"_J));
-		misc->AddItem(std::make_shared<CommandItem>("diamondcasinoheistskipdrilling"_J));
-		misc->AddItem(std::make_shared<CommandItem>("diamondcasinoheistsolomantrap"_J));
-		misc->AddItem(std::make_shared<CommandItem>("diamondcasinoheistinstantfinish"_J));
+		setupTab->AddItem(cuts);
+		setupTab->AddItem(setup);
+		setupTab->AddItem(loots);
 
-		tab->AddItem(cuts);
-		tab->AddItem(setups);
-		tab->AddItem(loots);
-		tab->AddItem(misc);
+		// ── During Heist ─────────────────────────────────────────────────────
+		auto duringTab = std::make_shared<TabItem>("During Heist");
+		duringTab->AddItem(std::make_shared<ImGuiItem>([] {
+			static constexpr ActionButton kShortcuts[] = {
+			    {ICON_LAPTOP,      "Skip Hacking",  "diamondcasinoheistskiphacking"_J},
+			    {ICON_DRILL,       "Skip Drilling", "diamondcasinoheistskipdrilling"_J},
+			    {ICON_CREDIT_CARD, "Solo Mantrap",  "diamondcasinoheistsolomantrap"_J},
+			    {ICON_FLAG,        "Instant Finish", "diamondcasinoheistinstantfinish"_J},
+			};
+			DrawDuringHeistSections(kShortcuts);
+		}));
+
+		sections->AddItem(std::move(setupTab));
+		sections->AddItem(std::move(duringTab));
+		tab->AddItem(std::move(sections));
 
 		return tab;
 	}

@@ -8,6 +8,7 @@
 #include "core/backend/ScriptMgr.hpp"
 #include "game/gta/Natives.hpp"
 #include "game/backend/Self.hpp"
+#include "game/features/teleport/TeleportToPoint.hpp"
 
 namespace YimMenu::Features
 {
@@ -63,12 +64,12 @@ namespace YimMenu::Features
 		static BoolCommand _KortzCenterCaracara{"kortzcenterheistcaracara", "Armored Caracara", "Armored Caracara", true};
 		static BoolCommand _KortzCenterAnnihilator{"kortzcenterheistannihilator", "Annihilator Stealth", "Annihilator stealth", true};
 		static BoolCommand _KortzCenterManchez{"kortzcenterheistmanchez", "Manchez", "Manchez", true};
-		static BoolCommand _KortzCenterPrepEMP{"kortzcenterheistprepemp", "EMP Charges (Prep)", "EMP charges prep", true};
+		static BoolCommand _KortzCenterPrepEMP{"kortzcenterheistprepemp", "EMP Charges (Prep)", "Marks the EMP Charges prep mission as complete", true};
 		static BoolCommand _KortzCenterGuardShipments{"kortzcenterheistguardshipments", "Guard Shipments", "Guard shipments", true};
 		static BoolCommand _KortzCenterGuardRoutesPrep{"kortzcenterheistguardroutesprep", "Guard Routes (Prep)", "Guard routes prep", true};
 		static BoolCommand _KortzCenterGlassCutterPrep{"kortzcenterheistglasscutterprep", "Glass Cutter (Prep)", "Glass cutter prep", true};
 		static BoolCommand _KortzCenterPowerDrillsPrep{"kortzcenterheistpowerdrillsprep", "Power Drills (Prep)", "Power drills prep", true};
-		static BoolCommand _KortzCenterEMPChargesPrep{"kortzcenterheistempchargesprep", "EMP Charges (Prep)", "EMP charges prep", true};
+		static BoolCommand _KortzCenterEMPChargesPrep{"kortzcenterheistempchargesprep", "EMP Charges Progress", "EMP charges prep progress bits", true};
 		static BoolCommand _KortzCenterCaracaraPrep{"kortzcenterheistcaracaraprep", "Caracara (Prep)", "Armored Caracara prep", true};
 		static BoolCommand _KortzCenterAnnihilatorPrep{"kortzcenterheistannihilatorprep", "Annihilator (Prep)", "Annihilator stealth prep", true};
 		static BoolCommand _KortzCenterManchezPrep{"kortzcenterheistmanchezprep", "Manchez (Prep)", "Manchez prep", true};
@@ -225,6 +226,12 @@ namespace YimMenu::Features
 				Stats::SetInt("MPX_K26_HEIST_TARGET", _KortzCenterPrimaryTarget.GetState());
 			}
 		};
+
+		// --- Teleports ---
+		static TeleportToPoint _KortzCenterTpCctvServerRoom{"kortzcenterheisttpcctvserverroom", "CCTV Server Room", "Teleports to the Kortz Center CCTV server room", {2625.7615f, 5907.5127f, -61.0001f}, 77.6f};
+		static TeleportToPoint _KortzCenterTpGreenPowerbox{"kortzcenterheisttpgreenpowerbox", "Green Powerbox", "Teleports to the Kortz Center green powerbox", {2636.9795f, 5862.7124f, -61.0001f}, 270.5f};
+		static TeleportToPoint _KortzCenterTpStaffRoom{"kortzcenterheisttpstaffroom", "Staff Room", "Teleports to the Kortz Center staff room", {2591.5691f, 5927.6030f, -48.9999f}, 89.1f};
+		static TeleportToPoint _KortzCenterTpSaleSpot{"kortzcenterheisttpsalespot", "Sale Spot", "Teleports to the Kortz Center sale spot", {734.5290f, -1934.7460f, 29.2877f}, 23.2f};
 
 		static SkipFingerprint _KortzCenterSkipFingerprint{"kortzcenterheistskipfingerprint", "Skip Fingerprint Hack", "Skips fingerprint hacking minigame in computer room"};
 		static SkipSignalNodes _KortzCenterSkipSignalNodes{"kortzcenterheistskipsignalnodes", "Skip Signal Nodes", "Skips signal nodes hacking at vault keypad"};
