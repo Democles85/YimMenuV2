@@ -9,11 +9,22 @@ namespace YimMenu::Features
 
 		virtual void OnTick() override
 		{
-			auto veh = Self::GetVehicle();
-			if (veh)
+			if (auto veh = Self::GetVehicle())
 				veh.Fix();
 		}
 	};
 
-	static KeepFixed _KeepFixed{"keepfixed", "Keep Vehicle Fixed", "Keeps your vehicle clean and fixed"};
+	class KeepVehicleClean : public LoopedCommand
+	{
+		using LoopedCommand::LoopedCommand;
+
+		virtual void OnTick() override
+		{
+			if (auto veh = Self::GetVehicle())
+				veh.Clean();
+		}
+	};
+
+	static KeepFixed _KeepFixed{"keepfixed", "Keep Vehicle Fixed", "Keeps your vehicle repaired"};
+	static KeepVehicleClean _KeepVehicleClean{"keepvehicleclean", "Keep Vehicle Clean", "Keeps your vehicle free from dirt and decals"};
 }
