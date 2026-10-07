@@ -57,7 +57,7 @@ namespace YimMenu
 		{
 			label_str = m_LabelOverride.value();
 		}
-		else if (m_Command->GetLabel() && m_Command->GetLabel()[0] != '\0')
+		else if (!m_Command->GetLabel().empty())
 		{
 			label_str = m_Command->GetLabel();
 		}
