@@ -153,10 +153,10 @@ namespace YimMenu::Submenus::KortzCenterSetupUI
 		{
 			BeginPanel("heist");
 			SectionLabel("Heist");
-			DrawLabeledListComboFmt(target, "Primary Target", [hard](int id, char* out, size_t n) {
+			DrawLabeledListComboFmt(target, "Primary Target", [is_hard = hard](int id, char* out, size_t n) {
 				const auto* p = FindPainting(id);
-				const long long w = PrimaryValue(p, hard, true);
-				const long long f = PrimaryValue(p, hard, false);
+				const long long w = PrimaryValue(p, is_hard, true);
+				const long long f = PrimaryValue(p, is_hard, false);
 				if (w <= 0 && f <= 0)
 				{
 					snprintf(out, n, "unconfirmed");

@@ -127,10 +127,10 @@ namespace YimMenu::Submenus::DoomsdaySetupUI
 		{
 			BeginPanel("heist");
 			SectionLabel("Heist");
-			DrawLabeledListComboFmt(category, "Select Heist", [hard](int id, char* out, size_t n) {
+			DrawLabeledListComboFmt(category, "Select Heist", [is_hard = hard](int id, char* out, size_t n) {
 				const auto* a = FindAct(id);
-				const long long rep = hard ? a->hard : a->normal;
-				const long long week = hard ? a->weekly_h : a->weekly_n;
+				const long long rep = is_hard ? a->hard : a->normal;
+				const long long week = is_hard ? a->weekly_h : a->weekly_n;
 				char r[32], w[32], s[32];
 				FmtMoney(r, sizeof(r), rep);
 				FmtMoney(w, sizeof(w), week);
