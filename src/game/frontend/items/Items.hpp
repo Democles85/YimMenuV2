@@ -108,8 +108,6 @@ namespace YimMenu
 	private:
 		ListCommand* m_Command;
 		std::optional<std::string> m_LabelOverride;
-		std::optional<int> m_ItemWidth = std::nullopt;
-		std::optional<std::string> m_SelectedItem = std::nullopt;
 	};
 
 	class ConditionalItem : public UIItem

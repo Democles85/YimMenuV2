@@ -5,6 +5,7 @@
 #include "core/util/Joaat.hpp"
 #include "game/frontend/Menu.hpp"
 
+#include <cstdio>
 #include <span>
 
 namespace YimMenu::Submenus::IconUI
@@ -134,13 +135,18 @@ namespace YimMenu::Submenus::IconUI
 		for (size_t i = 0; i < actions.size(); ++i)
 		{
 			const auto& action = actions[i];
-			ImGui::PushID(static_cast<int>(action.hash));
+
+			// Keep IDs stable and unique: PushID(hash) + a fixed "##..." label.
+			// Avoid temporary std::string.c_str() IDs (dangling) and bare numeric labels.
+			char id_scope[32];
+			snprintf(id_scope, sizeof(id_scope), "action_%08x", static_cast<unsigned int>(action.hash));
+			ImGui::PushID(id_scope);
 
 			const char* tooltip = nullptr;
 			if (auto* cmd = Commands::GetCommand<Command>(action.hash))
 				tooltip = cmd->GetDescription().c_str();
 
-			if (DrawIconButton(std::to_string(action.hash).c_str(), action.icon, action.label, {buttonWidth, buttonHeight}, tooltip))
+			if (DrawIconButton("##action", action.icon, action.label, {buttonWidth, buttonHeight}, tooltip))
 				CallCommand(action.hash);
 
 			ImGui::PopID();

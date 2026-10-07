@@ -1,59 +1,41 @@
 #include "ApartmentHeist.hpp"
+#include "ApartmentSetupUI.hpp"
 #include "HeistUI.hpp"
 
 namespace YimMenu::Submenus
 {
-	std::shared_ptr<TabItem> RenderApartmentHeistMenu()
+	namespace
 	{
+		using namespace HeistLayout;
 		using namespace HeistUI;
 
+		void DrawDuring()
+		{
+			static constexpr ActionButton kShortcuts[] = {
+			    {ICON_LAPTOP, "Skip Hacking", "apartmentheistskiphacking"_J},
+			    {ICON_DRILL, "Skip Drilling", "apartmentheistskipdrilling"_J},
+			    {ICON_CREDIT_CARD, "Skip Swiping", "apartmentheistskipswiping"_J},
+			    {ICON_FLAG, "Instant Finish", "apartmentheistinstantfinish"_J},
+			    {ICON_SKULL, "Instant Finish PSJ", "apartmentheistinstantfinishpacific"_J},
+			};
+			DrawDuringHeist(kShortcuts);
+		}
+	}
+
+	std::shared_ptr<TabItem> RenderApartmentHeistMenu()
+	{
 		auto tab = std::make_shared<TabItem>("Apartment Heist");
 		auto sections = std::make_shared<TabBarItem>("ApartmentHeistSections");
 
-		// ── Setup ────────────────────────────────────────────────────────────
 		auto setupTab = std::make_shared<TabItem>("Setup");
+		setupTab->AddItem(std::make_shared<ImGuiItem>([] { ApartmentSetupUI::Draw(); }));
 
-		auto cuts = std::make_shared<Group>("Heist Cuts", 2, ICON_PERCENT);
-		cuts->AddItem(std::make_shared<IntCommandItem>("apartmentheistcut1"_J));
-		cuts->AddItem(std::make_shared<IntCommandItem>("apartmentheistcut3"_J));
-		cuts->AddItem(std::make_shared<IntCommandItem>("apartmentheistcut2"_J));
-		cuts->AddItem(std::make_shared<IntCommandItem>("apartmentheistcut4"_J));
-		cuts->AddItem(std::make_shared<ImGuiItem>([] {
-			static constexpr ActionButton kCutActions[] = {
-			    {ICON_PERCENT, "Set Cuts",    "apartmentheistsetcuts"_J},
-			    {ICON_USERS,   "Force Ready", "apartmentheistforceready"_J},
-			};
-			DrawSetupActions(kCutActions);
-		}));
-
-		auto setup = std::make_shared<Group>("Heist Setup", 7, ICON_CHECK);
-		setup->AddItem(std::make_shared<ImGuiItem>([] {
-			static constexpr ActionButton kSetupActions[] = {
-			    {ICON_CHECK, "Apply Setup", "apartmentheistsetup"_J},
-			};
-			DrawSetupActions(kSetupActions);
-		}));
-
-		setupTab->AddItem(cuts);
-		setupTab->AddItem(setup);
-
-		// ── During Heist ─────────────────────────────────────────────────────
 		auto duringTab = std::make_shared<TabItem>("During Heist");
-		duringTab->AddItem(std::make_shared<ImGuiItem>([] {
-			static constexpr ActionButton kShortcuts[] = {
-			    {ICON_LAPTOP,      "Skip Hacking",       "apartmentheistskiphacking"_J},
-			    {ICON_DRILL,       "Skip Drilling",      "apartmentheistskipdrilling"_J},
-			    {ICON_CREDIT_CARD, "Skip Swiping",       "apartmentheistskipswiping"_J},
-			    {ICON_FLAG,        "Instant Finish",     "apartmentheistinstantfinish"_J},
-			    {ICON_SKULL,       "Instant Finish PSJ", "apartmentheistinstantfinishpacific"_J},
-			};
-			DrawDuringHeistSections(kShortcuts);
-		}));
+		duringTab->AddItem(std::make_shared<ImGuiItem>([] { DrawDuring(); }));
 
 		sections->AddItem(std::move(setupTab));
 		sections->AddItem(std::move(duringTab));
 		tab->AddItem(std::move(sections));
-
 		return tab;
 	}
 }

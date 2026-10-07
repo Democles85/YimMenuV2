@@ -22,72 +22,72 @@ namespace YimMenu
 
 		int current_val = m_Command->GetState();
 		auto& list = m_Command->GetList();
+		const char* selected_label = "";
 		const char* largest_string = "";
 		std::size_t largest_string_len = 0;
 
-		if (!m_SelectedItem.has_value() || !m_ItemWidth.has_value())
+		for (auto& item : list)
 		{
-			for (auto& item : list)
+			if (!item.second)
+				continue;
+
+			if (item.first == current_val)
+				selected_label = item.second;
+
+			const auto length = strlen(item.second);
+			if (length > largest_string_len)
 			{
-				if (item.first == current_val)
-				{
-					m_SelectedItem = item.second;
-				}
-
-				int length = strlen(item.second);
-				if (length > largest_string_len)
-				{
-					largest_string = item.second;
-					largest_string_len = length;
-				}
+				largest_string = item.second;
+				largest_string_len = length;
 			}
-
-			if (!m_SelectedItem.has_value())
-				m_SelectedItem = "";
-
-			auto size = ImGui::CalcTextSize(largest_string);
-			m_ItemWidth = size.x + 40.0f;
 		}
 
-		ImGui::SetNextItemWidth(m_ItemWidth.value());
+		ImGui::SetNextItemWidth(ImGui::CalcTextSize(largest_string).x + 40.0f);
 
-		// Get the label, preferring override then command label
-		std::string label_str;
+		char label_buf[128];
+		const char* combo_label = label_buf;
+		const unsigned int cmd_hash = static_cast<unsigned int>(m_Command->GetHash());
+
 		if (m_LabelOverride.has_value())
 		{
-			label_str = m_LabelOverride.value();
+			// Caller-provided labels often include an explicit "##id" — keep them intact
+			if (!m_LabelOverride->empty())
+				combo_label = m_LabelOverride->c_str();
+			else
+				snprintf(label_buf, sizeof(label_buf), "Select Option##list_%08x", cmd_hash);
 		}
 		else if (!m_Command->GetLabel().empty())
 		{
-			label_str = m_Command->GetLabel();
+			snprintf(label_buf, sizeof(label_buf), "%s##list_%08x", m_Command->GetLabel().c_str(), cmd_hash);
 		}
-
-		// If label is empty, create a unique fallback using the command's hash
-		if (label_str.empty())
+		else
 		{
-			char fallback_label[64];
-			snprintf(fallback_label, sizeof(fallback_label), "Select Option##%08x",
-			         static_cast<uint32_t>(m_Command->GetHash()));
-			label_str = fallback_label;
+			snprintf(label_buf, sizeof(label_buf), "Select Option##list_%08x", cmd_hash);
 		}
 
-		if (ImGui::BeginCombo(label_str.c_str(), m_SelectedItem.value().c_str()))
+		std::optional<int> pending_state;
+
+		if (ImGui::BeginCombo(combo_label, selected_label))
 		{
 			for (auto& el : list)
 			{
-				if (ImGui::Selectable(el.second, el.first == current_val))
-				{
-					current_val = el.first;
-					m_Command->SetState(el.first);
-				}
+				ImGui::PushID(el.first);
+
+				// Never pass an empty selectable label (collides with window ID)
+				const char* option_label = (el.second && el.second[0] != '\0') ? el.second : "(None)";
+				if (ImGui::Selectable(option_label, el.first == current_val))
+					pending_state = el.first;
 
 				if (el.first == current_val)
-				{
-					m_SelectedItem = el.second; // just in case
 					ImGui::SetItemDefaultFocus();
-				}
+
+				ImGui::PopID();
 			}
 			ImGui::EndCombo();
 		}
+
+		// Apply after EndCombo so OnChange list swaps don't run mid-widget
+		if (pending_state.has_value())
+			m_Command->SetState(*pending_state);
 	}
 }

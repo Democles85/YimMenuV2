@@ -92,9 +92,9 @@ namespace YimMenu::Features
                 {{0, "Shotgun Loadout"}, {1, "Revolver Loadout"}}
             },
             {
-                {{0, "                                        "}, {1, ""}},
-                {{0, ""}, {1, ""}},
-                {{0, ""}, {1, ""}}
+                {{0, "None"}, {1, "None"}},
+                {{0, "None"}, {1, "None"}},
+                {{0, "None"}, {1, "None"}}
             }
         };
         static ListCommand _DiamondCasinoHeistWeapon{"diamondcasinoheistweapon", "Weapon", "Weapon", diamondCasinoHeistWeapon[5][0], 0};
@@ -152,7 +152,7 @@ namespace YimMenu::Features
             {{0, "Retinue MK II"}, {1, "Drifty Yosemite"}, {2, "Sugoi"}, {3, "Jugular"}},
             {{0, "Manchez"}, {1, "Stryder"}, {2, "Defiler"}, {3, "Lectro"}},
             {{0, "Issi Classic"}, {1, "Asbo"}, {2, "Kanjo"}, {3, "Sentinel Classic"}},
-            {{0, "                           "}, {1, ""}, {2, ""}, {3, ""}}
+            {{0, "None"}, {1, "None"}, {2, "None"}, {3, "None"}}
         };
         static ListCommand _DiamondCasinoHeistVehicle{"diamondcasinoheistvehicle", "Vehicle", "Vehicle", diamondCasinoHeistVehicle[5], 0};
 

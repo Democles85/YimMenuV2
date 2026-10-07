@@ -1,5 +1,4 @@
 #include "ListCommand.hpp"
-#include "core/backend/FiberPool.hpp"
 
 namespace YimMenu
 {
@@ -31,11 +30,11 @@ namespace YimMenu
 
 	void ListCommand::SetState(int state)
 	{
-		FiberPool::Push([this] {
-			OnChange();
-		});
+		// Apply immediately so dependent UI (e.g. casino heist weapon/vehicle lists)
+		// updates before the next draw, instead of waiting on FiberPool.
 		m_State = state;
 		MarkDirty();
+		OnChange();
 	}
 
 	void ListCommand::SetList(std::vector<std::pair<int, const char*>> list)
