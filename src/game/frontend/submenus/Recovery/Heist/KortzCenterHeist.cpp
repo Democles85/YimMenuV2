@@ -13,7 +13,7 @@ namespace YimMenu::Submenus
 		// ── Setup ────────────────────────────────────────────────────────────
 		auto setupTab = std::make_shared<TabItem>("Setup");
 
-		auto setup = std::make_shared<Group>("Heist Setup");
+		auto setup = std::make_shared<Group>("Heist Setup", 7, ICON_CHECK);
 		setup->AddItem(std::make_shared<ListCommandItem>("kortzcenterheistprimarytarget"_J));
 		setup->AddItem(std::make_shared<ImGuiItem>([] {
 			static constexpr ActionButton kSetupActions[] = {
@@ -22,19 +22,19 @@ namespace YimMenu::Submenus
 			DrawSetupActions(kSetupActions);
 		}));
 
-		auto purchases = std::make_shared<Group>("Board Purchases", 2);
+		auto purchases = std::make_shared<Group>("Board Purchases", 2, ICON_DOLLAR);
 		purchases->AddItem(std::make_shared<BoolCommandItem>("kortzcenterheistguardroutes"_J));
 		purchases->AddItem(std::make_shared<BoolCommandItem>("kortzcenterheistglasscutter"_J));
 		purchases->AddItem(std::make_shared<BoolCommandItem>("kortzcenterheistpowerdrills"_J));
 		purchases->AddItem(std::make_shared<BoolCommandItem>("kortzcenterheistempcharges"_J));
 
-		auto intel = std::make_shared<Group>("Intel", 2);
+		auto intel = std::make_shared<Group>("Intel", 2, ICON_LAPTOP);
 		intel->AddItem(std::make_shared<BoolCommandItem>("kortzcenterheistscopeout"_J));
 		intel->AddItem(std::make_shared<BoolCommandItem>("kortzcenterheistalphamail"_J));
 		intel->AddItem(std::make_shared<BoolCommandItem>("kortzcenterheistscopesecondary"_J));
 		intel->AddItem(std::make_shared<BoolCommandItem>("kortzcenterheistscopepoi"_J));
 
-		auto equipment = std::make_shared<Group>("Equipment", 2);
+		auto equipment = std::make_shared<Group>("Equipment", 2, ICON_TOOLS);
 		equipment->AddItem(std::make_shared<BoolCommandItem>("kortzcenterheisthazmat"_J));
 		equipment->AddItem(std::make_shared<BoolCommandItem>("kortzcenterheiststaffkeycard"_J));
 		equipment->AddItem(std::make_shared<BoolCommandItem>("kortzcenterheisttacticalequip"_J));
@@ -48,7 +48,7 @@ namespace YimMenu::Submenus
 		equipment->AddItem(std::make_shared<BoolCommandItem>("kortzcenterheistpowerdrillsprep"_J));
 		equipment->AddItem(std::make_shared<BoolCommandItem>("kortzcenterheistempchargesprep"_J));
 
-		auto vehicles = std::make_shared<Group>("Vehicles", 2);
+		auto vehicles = std::make_shared<Group>("Vehicles", 2, ICON_CAR);
 		vehicles->AddItem(std::make_shared<BoolCommandItem>("kortzcenterheistcaracara"_J));
 		vehicles->AddItem(std::make_shared<BoolCommandItem>("kortzcenterheistannihilator"_J));
 		vehicles->AddItem(std::make_shared<BoolCommandItem>("kortzcenterheistmanchez"_J));

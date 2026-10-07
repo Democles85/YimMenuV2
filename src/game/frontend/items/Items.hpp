@@ -140,7 +140,7 @@ namespace YimMenu
 	class Group : public UIItem
 	{
 	public:
-		explicit Group(const std::string& name, int items_per_row = 7);
+		explicit Group(const std::string& name, int items_per_row = 7, const std::string& icon = "");
 		void Draw() override;
 
 		void AddItem(std::shared_ptr<UIItem>&& item)
@@ -160,6 +160,7 @@ namespace YimMenu
 
 	private:
 		std::string m_Name;
+		std::string m_Icon;
 		int m_ItemsPerColumn;
 		std::vector<std::shared_ptr<UIItem>> m_Items;
 	};

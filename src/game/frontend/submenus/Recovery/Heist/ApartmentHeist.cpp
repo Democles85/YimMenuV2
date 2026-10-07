@@ -13,7 +13,7 @@ namespace YimMenu::Submenus
 		// ── Setup ────────────────────────────────────────────────────────────
 		auto setupTab = std::make_shared<TabItem>("Setup");
 
-		auto cuts = std::make_shared<Group>("Heist Cuts", 2);
+		auto cuts = std::make_shared<Group>("Heist Cuts", 2, ICON_PERCENT);
 		cuts->AddItem(std::make_shared<IntCommandItem>("apartmentheistcut1"_J));
 		cuts->AddItem(std::make_shared<IntCommandItem>("apartmentheistcut3"_J));
 		cuts->AddItem(std::make_shared<IntCommandItem>("apartmentheistcut2"_J));
@@ -26,7 +26,7 @@ namespace YimMenu::Submenus
 			DrawSetupActions(kCutActions);
 		}));
 
-		auto setup = std::make_shared<Group>("Heist Setup");
+		auto setup = std::make_shared<Group>("Heist Setup", 7, ICON_CHECK);
 		setup->AddItem(std::make_shared<ImGuiItem>([] {
 			static constexpr ActionButton kSetupActions[] = {
 			    {ICON_CHECK, "Apply Setup", "apartmentheistsetup"_J},

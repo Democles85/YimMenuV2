@@ -67,11 +67,17 @@ namespace YimMenu
 
 		auto font = io.Fonts->AddFontFromMemoryTTF(const_cast<std::uint8_t*>(Fonts::MainFont), sizeof(Fonts::MainFont), size, &FontCfg, io.Fonts->GetGlyphRangesDefault());
 
-		// just use Arial for Cyrillic
+		// Some Windows installs do not include the optional locale fonts used here.
+		// Only merge them when they actually exist; otherwise keep the embedded font as the fallback.
+		const auto systemRoot = std::getenv("SYSTEMROOT") ? std::filesystem::path(std::getenv("SYSTEMROOT")) : std::filesystem::path("C:/Windows");
+		const auto arialPath = systemRoot / "Fonts" / "arial.ttf";
+		const auto meiryoPath = systemRoot / "Fonts" / "meiryo.ttc";
 
 		FontCfg.MergeMode = true;
-		io.Fonts->AddFontFromFileTTF((std::filesystem::path(std::getenv("SYSTEMROOT")) / "Fonts" / "arial.ttf").string().c_str(), size, &FontCfg, GetGlyphRangesCyrillicOnly());
-		io.Fonts->AddFontFromFileTTF((std::filesystem::path(std::getenv("SYSTEMROOT")) / "Fonts" / "meiryo.ttc").string().c_str(), size, &FontCfg, io.Fonts->GetGlyphRangesJapanese());
+		if (std::filesystem::exists(arialPath))
+			io.Fonts->AddFontFromFileTTF(arialPath.string().c_str(), size, &FontCfg, GetGlyphRangesCyrillicOnly());
+		if (std::filesystem::exists(meiryoPath))
+			io.Fonts->AddFontFromFileTTF(meiryoPath.string().c_str(), size, &FontCfg, io.Fonts->GetGlyphRangesJapanese());
 
 		io.Fonts->Build();
 

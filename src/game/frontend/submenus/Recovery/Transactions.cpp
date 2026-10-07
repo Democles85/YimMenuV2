@@ -10,6 +10,9 @@
 #include "types/netshop/CNetShopTransaction.hpp"
 #include "types/netshop/netCatalogBaseItem.hpp"
 
+// Declaration of ICON_BOLT from IconUI.hpp
+constexpr const char* ICON_BOLT = "\xef\x83\xa7";
+
 namespace YimMenu::Submenus
 {
 	constexpr std::array<std::pair<const char*, std::uint32_t>, 28> NET_SHOP_ACTIONS =
@@ -476,7 +479,11 @@ namespace YimMenu::Submenus
 		}
 
 		if (item_to_delete.has_value())
-			info.m_Basket.m_BasketItems.erase(std::next(info.m_Basket.m_BasketItems.begin(), *item_to_delete));
+		{
+			auto index = static_cast<std::size_t>(*item_to_delete);
+			if (index < info.m_Basket.m_BasketItems.size())
+				info.m_Basket.m_BasketItems.erase(info.m_Basket.m_BasketItems.begin() + static_cast<std::ptrdiff_t>(index));
+		}
 
 		if (ImGui::Button("Add Item"))
 		{
@@ -503,7 +510,7 @@ namespace YimMenu::Submenus
 	std::shared_ptr<Category> BuildTransactionsMenu()
 	{
 		auto menu = std::make_shared<Category>("Transactions");
-		auto normal = std::make_shared<Group>("Triggerer");
+		auto normal = std::make_shared<Group>("Triggerer", 7, ICON_BOLT);
 
 		normal->AddItem(std::make_unique<ImGuiItem>([] {
 			if (!NativeInvoker::AreHandlersCached())

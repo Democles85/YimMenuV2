@@ -50,7 +50,28 @@ namespace YimMenu
 		}
 
 		ImGui::SetNextItemWidth(m_ItemWidth.value());
-		if (ImGui::BeginCombo(m_LabelOverride.value_or(m_Command->GetLabel()).c_str(), m_SelectedItem.value().c_str()))
+
+		// Get the label, preferring override then command label
+		std::string label_str;
+		if (m_LabelOverride.has_value())
+		{
+			label_str = m_LabelOverride.value();
+		}
+		else if (m_Command->GetLabel() && m_Command->GetLabel()[0] != '\0')
+		{
+			label_str = m_Command->GetLabel();
+		}
+
+		// If label is empty, create a unique fallback using the command's hash
+		if (label_str.empty())
+		{
+			char fallback_label[64];
+			snprintf(fallback_label, sizeof(fallback_label), "Select Option##%08x",
+			         static_cast<uint32_t>(m_Command->GetHash()));
+			label_str = fallback_label;
+		}
+
+		if (ImGui::BeginCombo(label_str.c_str(), m_SelectedItem.value().c_str()))
 		{
 			for (auto& el : list)
 			{
